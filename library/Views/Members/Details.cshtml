@@ -1,0 +1,60 @@
+﻿@model MemberDetails
+@{
+    ViewData["Title"] = Model.Member.FullName;
+}
+
+<div class="page-header">
+    <div class="page-header-title">
+        <h1>@Model.Member.FullName</h1>
+        <p>@Model.Member.MemberType · @Model.Member.Email</p>
+    </div>
+    <div class="page-header-actions">
+        <a asp-action="Index" class="btn btn-secondary">← Back to members</a>
+    </div>
+</div>
+
+<h2 class="mb-3">Loan History</h2>
+
+@if (Model.Loans.Count == 0)
+{
+    <div class="empty-state">
+        <div class="empty-state-icon">📚</div>
+        <h3 class="empty-state-title">No loans yet</h3>
+        <p class="empty-state-text">This member has never borrowed a book.</p>
+    </div>
+}
+else
+{
+    <div class="table-wrapper">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Book</th>
+                    <th>Loaned</th>
+                    <th>Due</th>
+                    <th>Returned</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var loan in Model.Loans)
+                {
+                    var badgeClass = loan.Status switch
+                    {
+                        "Out" => "badge badge-out",
+                        "Overdue" => "badge badge-overdue",
+                        _ => "badge badge-returned"
+                    };
+                    var due = loan.LoanedOn.AddDays(loan.DaysAllowed);
+                    <tr>
+                        <td class="fw-600">@loan.BookTitle</td>
+                        <td class="text-muted">@loan.LoanedOn.ToString("MMM d, yyyy")</td>
+                        <td class="text-muted">@due.ToString("MMM d, yyyy")</td>
+                        <td class="text-muted">@(loan.ReturnedOn?.ToString("MMM d, yyyy") ?? "—")</td>
+                        <td><span class="@badgeClass">@loan.Status</span></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

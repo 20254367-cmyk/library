@@ -34,11 +34,8 @@ public class BookRepository
         var books = new List<Book>();
 
         await using var command = _dataSource.CreateCommand(sql);
-        await using var reader = await command.ExecuteReaderAsync();
 
-        while (await reader.ReadAsync())   // once for each row
         {
-            books.Add(ReadBook(reader));
         }
         return books;
     }

@@ -3,54 +3,81 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - library</title>
-    <script type="importmap"></script>
+    <title>@ViewData["Title"] · UBagUio Library</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/library.styles.css" asp-append-version="true" />
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">library</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Books" asp-action="Index">Books</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Members" asp-action="Index">Members</a>
-                        </li>
-                        <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-                        
-                    </ul>
+    <div class="app-shell">
+
+        <!-- ===== Sidebar ===== -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-brand">
+                <div class="sidebar-brand-mark">📚</div>
+                <div class="sidebar-brand-text">
+                    UBagUio
+                    <small>Library System</small>
                 </div>
             </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
+
+            <nav class="sidebar-nav">
+                <div class="sidebar-section">Main</div>
+
+                <a class="sidebar-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Home" ? "active" : "")"
+                   asp-controller="Home" asp-action="Index">
+                    <span class="icon">🏠</span> Dashboard
+                </a>
+                <a class="sidebar-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Books" ? "active" : "")"
+                   asp-controller="Books" asp-action="Index">
+                    <span class="icon">📖</span> Books
+                </a>
+                <a class="sidebar-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Members" ? "active" : "")"
+                   asp-controller="Members" asp-action="Index">
+                    <span class="icon">👥</span> Members
+                </a>
+
+                <div class="sidebar-section">Operations</div>
+
+                <a class="sidebar-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Loans" ? "active" : "")"
+                   asp-controller="Loans" asp-action="Index">
+                    <span class="icon">🔄</span> Loans
+                </a>
+                <a class="sidebar-link" asp-controller="Loans" asp-action="Borrow">
+                    <span class="icon">➕</span> Borrow a book
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                &copy; @DateTime.Now.Year · Library DB
+            </div>
+        </aside>
+
+        <!-- ===== Main ===== -->
+        <div class="main-area">
+            <header class="topbar">
+                <div class="topbar-title">@ViewData["Title"]</div>
+                <div class="topbar-actions">
+                    <div class="topbar-user">
+                        <div class="avatar">LA</div>
+                        <span class="d-none d-md-inline">Librarian</span>
+                    </div>
+                </div>
+            </header>
+
+            <main class="content">
+                @RenderBody()
+            </main>
+
+            <footer class="app-footer">
+                UBagUio Library Management System · Database Management and Web Systems
+            </footer>
+        </div>
     </div>
 
-
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2026 - library - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
-    </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>

@@ -2,6 +2,6 @@
 
 internal class ErrorViewModel
 {
-    public string RequestId { get; set; }
+    public required string RequestId { get; set; }
     public bool ShowRequestId { get; internal set; }
 }

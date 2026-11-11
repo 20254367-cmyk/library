@@ -1,36 +1,47 @@
 ﻿@model Member
 @{
-    ViewData["Title"] = "Add a member";
+    ViewData["Title"] = "Add Member";
 }
 
-<h1 class="mb-3">Add a member</h1>
-
-<form asp-action="Create" method="post" class="card card-body" style="max-width:36rem">
-
-    <div class="mb-3">
-        <label asp-for="FullName" class="form-label"></label>
-        <input asp-for="FullName" class="form-control" />
-        <span asp-validation-for="FullName" class="text-danger"></span>
+<div class="page-header">
+    <div class="page-header-title">
+        <h1>Add Member</h1>
+        <p>Register a new library member</p>
     </div>
-
-    <div class="mb-3">
-        <label asp-for="Email" class="form-label"></label>
-        <input asp-for="Email" class="form-control" />
-        <span asp-validation-for="Email" class="text-danger"></span>
+    <div class="page-header-actions">
+        <a asp-action="Index" class="btn btn-secondary">← Back</a>
     </div>
+</div>
 
-    <div class="mb-3">
-        <label asp-for="MemberType" class="form-label"></label>
-        <select asp-for="MemberType" class="form-select">
-            <option>Regular</option>
-            <option>Student</option>
-            <option>Faculty</option>
-        </select>
-        <span asp-validation-for="MemberType" class="text-danger"></span>
-    </div>
+<div class="form-card">
+    <form asp-action="Create" method="post" class="form-card-body">
+        <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
 
-    <div>
-        <button type="submit" class="btn btn-primary">Save</button>
-        <a asp-action="Index" class="btn btn-link">Cancel</a>
-    </div>
-</form>
+        <div class="form-group">
+            <label asp-for="FullName" class="form-label">Full Name <span class="req">*</span></label>
+            <input asp-for="FullName" class="form-control" placeholder="Lastname, Firstname" />
+            <span asp-validation-for="FullName" class="form-error"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Email" class="form-label">Email</label>
+            <input asp-for="Email" class="form-control" placeholder="ana@ubaguio.edu" />
+            <span asp-validation-for="Email" class="form-error"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="MemberType" class="form-label">Member Type <span class="req">*</span></label>
+            <input asp-for="MemberType" class="form-control" placeholder="Student / Faculty" />
+            <span asp-validation-for="MemberType" class="form-error"></span>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Save Member</button>
+            <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

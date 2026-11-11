@@ -1,48 +1,587 @@
-﻿/* Please see documentation at https://learn.microsoft.com/aspnet/core/client-side/bundling-and-minification
-for details on configuring this project to bundle and minify static web assets. */
+﻿/* ============================================================
+   UBagUio Library — Modern Blue Theme (Lab 11)
+   Replaces the default ASP.NET Core template styles.
+   ============================================================ */
 
+/* ===== Base template rules (kept so existing markup still works) ===== */
 a.navbar-brand {
-  white-space: normal;
-  text-align: center;
-  word-break: break-all;
+    white-space: normal;
+    text-align: center;
+    word-break: break-all;
 }
 
 a {
-  color: #0077cc;
+    color: #0077cc;
 }
 
 .btn-primary {
-  color: #fff;
-  background-color: #1b6ec2;
-  border-color: #1861ac;
+    color: #fff;
+    background-color: #1b6ec2;
+    border-color: #1861ac;
 }
 
-.nav-pills .nav-link.active, .nav-pills .show > .nav-link {
-  color: #fff;
-  background-color: #1b6ec2;
-  border-color: #1861ac;
+.nav-pills .nav-link.active,
+.nav-pills .show > .nav-link {
+    color: #fff;
+    background-color: #1b6ec2;
+    border-color: #1861ac;
 }
 
 .border-top {
-  border-top: 1px solid #e5e5e5;
+    border-top: 1px solid #e5e5e5;
 }
+
 .border-bottom {
-  border-bottom: 1px solid #e5e5e5;
+    border-bottom: 1px solid #e5e5e5;
 }
 
 .box-shadow {
-  box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
+    box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
 }
 
 button.accept-policy {
-  font-size: 1rem;
-  line-height: inherit;
+    font-size: 1rem;
+    line-height: inherit;
 }
 
+/* Footer: removed absolute positioning so long pages don't overlap it */
 .footer {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  white-space: nowrap;
-  line-height: 60px;
+    width: 100%;
+    white-space: nowrap;
+    line-height: 60px;
+    background: #fff;
+    border-top: 1px solid #e2e8f0;
+    color: #94a3b8;
+    font-size: .85rem;
 }
+
+/* ============================================================
+   Theme tokens
+   ============================================================ */
+:root {
+    --blue-950: #061a3a;
+    --blue-900: #0b2a5b;
+    --blue-800: #103a7a;
+    --blue-700: #1a4fa0;
+    --blue-600: #2563eb;
+    --blue-500: #3b82f6;
+    --blue-400: #60a5fa;
+    --blue-100: #dbeafe;
+    --blue-50: #eff6ff;
+    --ink: #0f172a;
+    --ink-soft: #475569;
+    --muted: #94a3b8;
+    --bg: #f4f7fb;
+    --paper: #ffffff;
+    --line: #e2e8f0;
+    --line-2: #cbd5e1;
+    --danger: #dc2626;
+    --danger-2: #b91c1c;
+    --danger-bg: #fef2f2;
+    --danger-ln: #fecaca;
+    --success: #16a34a;
+    --success-bg: #f0fdf4;
+    --success-ln: #bbf7d0;
+    --warn: #d97706;
+    --warn-bg: #fffbeb;
+    --warn-ln: #fde68a;
+    --radius: 12px;
+    --radius-lg: 16px;
+    --shadow-sm: 0 1px 2px rgba(15,23,42,.06);
+    --shadow-md: 0 4px 14px rgba(15,23,42,.08);
+    --shadow-lg: 0 12px 34px rgba(15,23,42,.12);
+}
+
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+    font-size: 15px;
+    line-height: 1.55;
+    margin: 0;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* ===== Layout ===== */
+.lib-page {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 2.5rem 1.25rem 4rem;
+}
+
+/* ===== Hero ===== */
+.lib-hero {
+    background: linear-gradient(135deg, var(--blue-800) 0%, var(--blue-600) 60%, var(--blue-500) 100%);
+    color: #fff;
+    padding: 3rem 2rem;
+    border-radius: var(--radius-lg);
+    margin-bottom: 2rem;
+    box-shadow: var(--shadow-lg);
+    position: relative;
+    overflow: hidden;
+}
+
+    .lib-hero::after {
+        content: "";
+        position: absolute;
+        right: -60px;
+        top: -60px;
+        width: 240px;
+        height: 240px;
+        background: rgba(255,255,255,.08);
+        border-radius: 50%;
+    }
+
+    .lib-hero h1 {
+        font-size: 2.2rem;
+        margin: 0 0 .4rem;
+        font-weight: 700;
+        letter-spacing: -.02em;
+    }
+
+    .lib-hero p {
+        margin: 0;
+        font-size: 1.05rem;
+        opacity: .9;
+        max-width: 42rem;
+    }
+
+/* ===== Toolbar ===== */
+.lib-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.75rem;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+    .lib-toolbar h2 {
+        margin: 0;
+        font-size: 1.65rem;
+        font-weight: 700;
+        color: var(--blue-900);
+        letter-spacing: -.02em;
+    }
+
+.lib-count {
+    color: var(--ink-soft);
+    margin: .25rem 0 0;
+    font-size: .95rem;
+}
+
+/* ===== Buttons ===== */
+.lib-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: .4rem;
+    padding: .6rem 1.15rem;
+    border-radius: 10px;
+    font: inherit;
+    font-weight: 600;
+    font-size: .92rem;
+    text-decoration: none;
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: background .15s ease, transform .1s ease, box-shadow .15s ease, border-color .15s ease;
+    white-space: nowrap;
+}
+
+    .lib-btn:hover {
+        transform: translateY(-1px);
+    }
+
+.lib-btn-primary {
+    background: var(--blue-600);
+    color: #fff;
+    box-shadow: 0 1px 2px rgba(37,99,235,.35);
+}
+
+    .lib-btn-primary:hover {
+        background: var(--blue-700);
+        box-shadow: 0 6px 16px rgba(37,99,235,.35);
+    }
+
+.lib-btn-ghost {
+    background: #fff;
+    color: var(--blue-700);
+    border-color: var(--line-2);
+}
+
+    .lib-btn-ghost:hover {
+        background: var(--blue-50);
+        border-color: var(--blue-400);
+    }
+
+.lib-btn-danger {
+    background: var(--danger);
+    color: #fff;
+}
+
+    .lib-btn-danger:hover {
+        background: var(--danger-2);
+        box-shadow: 0 6px 16px rgba(220,38,38,.3);
+    }
+
+.lib-btn-success {
+    background: var(--success);
+    color: #fff;
+}
+
+    .lib-btn-success:hover {
+        background: #15803d;
+        box-shadow: 0 6px 16px rgba(22,163,74,.3);
+    }
+
+.lib-btn-small {
+    padding: .4rem .85rem;
+    font-size: .82rem;
+    border-radius: 8px;
+}
+
+/* ===== Card grid ===== */
+.lib-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.1rem;
+}
+
+.lib-card {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 1.25rem 1.25rem 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: .55rem;
+    box-shadow: var(--shadow-sm);
+    transition: box-shadow .18s ease, transform .18s ease, border-color .18s ease;
+}
+
+    .lib-card:hover {
+        transform: translateY(-3px);
+        box-shadow: var(--shadow-md);
+        border-color: var(--blue-100);
+    }
+
+.lib-card-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin: 0;
+    color: var(--blue-950);
+    letter-spacing: -.01em;
+    line-height: 1.3;
+}
+
+.lib-card-meta {
+    font-size: .9rem;
+    color: var(--ink-soft);
+    margin: 0;
+}
+
+    .lib-card-meta strong {
+        color: var(--ink);
+        font-weight: 600;
+    }
+
+.lib-card-actions {
+    display: flex;
+    gap: .5rem;
+    margin-top: auto;
+    padding-top: .85rem;
+    border-top: 1px solid var(--line);
+}
+
+/* ===== Tag ===== */
+.lib-tag {
+    display: inline-block;
+    background: var(--blue-100);
+    color: var(--blue-800);
+    padding: .18rem .65rem;
+    border-radius: 999px;
+    font-size: .72rem;
+    font-weight: 600;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+}
+
+/* ===== Status pills ===== */
+.lib-status {
+    display: inline-flex;
+    align-items: center;
+    gap: .35rem;
+    padding: .28rem .75rem;
+    border-radius: 999px;
+    font-size: .78rem;
+    font-weight: 600;
+    letter-spacing: .02em;
+    border: 1px solid transparent;
+}
+
+    .lib-status::before {
+        content: "";
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: currentColor;
+    }
+
+.lib-status-out {
+    background: var(--warn-bg);
+    color: var(--warn);
+    border-color: var(--warn-ln);
+}
+
+.lib-status-overdue {
+    background: var(--danger-bg);
+    color: var(--danger);
+    border-color: var(--danger-ln);
+}
+
+.lib-status-returned {
+    background: var(--blue-50);
+    color: var(--ink-soft);
+    border-color: var(--line);
+}
+
+/* ===== Summary strip ===== */
+.lib-summary {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 1.5rem;
+}
+
+.lib-summary-item {
+    flex: 1 1 150px;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 1rem 1.15rem;
+    box-shadow: var(--shadow-sm);
+    display: flex;
+    flex-direction: column;
+    gap: .15rem;
+}
+
+    .lib-summary-item .num {
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: var(--blue-900);
+        letter-spacing: -.02em;
+    }
+
+    .lib-summary-item .label {
+        font-size: .78rem;
+        color: var(--muted);
+        text-transform: uppercase;
+        letter-spacing: .08em;
+        font-weight: 600;
+    }
+
+    .lib-summary-item.warn .num {
+        color: var(--warn);
+    }
+
+    .lib-summary-item.danger .num {
+        color: var(--danger);
+    }
+
+    .lib-summary-item.ok .num {
+        color: var(--success);
+    }
+
+/* ===== Forms ===== */
+.lib-form {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    padding: 2rem 1.75rem;
+    max-width: 36rem;
+    box-shadow: var(--shadow-md);
+}
+
+    .lib-form h1 {
+        font-size: 1.55rem;
+        margin: 0 0 1.5rem;
+        color: var(--blue-900);
+        letter-spacing: -.02em;
+    }
+
+.lib-field {
+    margin-bottom: 1.15rem;
+}
+
+    .lib-field label {
+        display: block;
+        font-weight: 600;
+        font-size: .88rem;
+        margin-bottom: .4rem;
+        color: var(--blue-950);
+    }
+
+    .lib-field input,
+    .lib-field select {
+        width: 100%;
+        padding: .65rem .85rem;
+        border: 1px solid var(--line-2);
+        border-radius: 10px;
+        font: inherit;
+        font-size: .95rem;
+        background: #fff;
+        color: var(--ink);
+        transition: border-color .15s ease, box-shadow .15s ease;
+    }
+
+        .lib-field input:focus,
+        .lib-field select:focus {
+            outline: none;
+            border-color: var(--blue-500);
+            box-shadow: 0 0 0 3px rgba(59,130,246,.22);
+        }
+
+.lib-actions {
+    display: flex;
+    gap: .75rem;
+    margin-top: 1.6rem;
+    flex-wrap: wrap;
+}
+
+.lib-error {
+    color: var(--danger);
+    font-size: .82rem;
+    margin-top: .3rem;
+    display: block;
+    font-weight: 500;
+}
+
+/* ===== Alert banners ===== */
+.lib-alert {
+    display: flex;
+    gap: .75rem;
+    align-items: flex-start;
+    padding: .9rem 1.1rem;
+    border-radius: 10px;
+    font-size: .9rem;
+    margin-bottom: 1.25rem;
+    border: 1px solid transparent;
+    font-weight: 500;
+}
+
+.lib-alert-icon {
+    flex: 0 0 auto;
+    font-size: 1.1rem;
+    line-height: 1;
+}
+
+.lib-alert-danger {
+    background: var(--danger-bg);
+    color: var(--danger-2);
+    border-color: var(--danger-ln);
+}
+
+.lib-alert-success {
+    background: var(--success-bg);
+    color: #166534;
+    border-color: var(--success-ln);
+}
+/* Hide the empty validation summary so it doesn't add space */
+.lib-alert:empty,
+.lib-alert ul:empty {
+    display: none;
+}
+
+.lib-alert ul {
+    margin: 0;
+    padding-left: 1.1rem;
+}
+
+/* ===== Danger box (Delete page) ===== */
+.lib-danger-box {
+    background: var(--paper);
+    border: 1px solid var(--danger-ln);
+    border-radius: var(--radius-lg);
+    padding: 1.9rem 1.75rem;
+    max-width: 36rem;
+    box-shadow: var(--shadow-md);
+    position: relative;
+}
+
+    .lib-danger-box::before {
+        content: "";
+        position: absolute;
+        inset: 0 auto 0 0;
+        width: 5px;
+        border-radius: var(--radius-lg) 0 0 var(--radius-lg);
+        background: var(--danger);
+    }
+
+    .lib-danger-box h1 {
+        color: var(--danger-2);
+        margin: 0 0 .5rem;
+        font-size: 1.55rem;
+        letter-spacing: -.02em;
+    }
+
+    .lib-danger-box > p {
+        color: var(--ink-soft);
+        margin: 0 0 1.2rem;
+    }
+
+.lib-detail-list {
+    margin: 0 0 1.4rem;
+    padding: 1rem 0;
+    border-top: 1px dashed var(--line-2);
+    border-bottom: 1px dashed var(--line-2);
+}
+
+    .lib-detail-list dt {
+        font-weight: 600;
+        color: var(--muted);
+        font-size: .74rem;
+        text-transform: uppercase;
+        letter-spacing: .08em;
+        margin-bottom: .15rem;
+    }
+
+    .lib-detail-list dd {
+        margin: 0 0 .9rem;
+        font-size: 1.05rem;
+        color: var(--ink);
+        font-weight: 500;
+    }
+
+        .lib-detail-list dd:last-child {
+            margin-bottom: 0;
+        }
+
+/* ===== Navbar ===== */
+.navbar {
+    background: #fff !important;
+    border-bottom: 1px solid var(--line);
+    box-shadow: var(--shadow-sm);
+}
+
+.navbar-brand {
+    color: var(--blue-800) !important;
+    font-weight: 700;
+    letter-spacing: -.01em;
+}
+
+.navbar .nav-link {
+    color: var(--ink-soft) !important;
+    font-weight: 500;
+    border-radius: 8px;
+    padding: .45rem .85rem !important;
+    transition: background .15s ease, color .15s ease;
+}
+
+    .navbar .nav-link:hover {
+        color: var(--blue-700) !important;
+        background: var(--blue-50);
+    }
