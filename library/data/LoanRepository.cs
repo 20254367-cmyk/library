@@ -1,12 +1,16 @@
-﻿using library.Models;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using Npgsql;
+using library.Models;
 
 namespace library.Data;
 
 // Every SQL statement about loans lives in this one class.
 public class LoanRepository
 {
-    public const int MaxOpenLoans = 3; // the most books one member may have out at once
+    // The library's rule: a member may have at most 3 books out at once.
+    public const int MaxOpenLoans = 3;
 
     private readonly NpgsqlDataSource _dataSource;
 
@@ -15,7 +19,10 @@ public class LoanRepository
         _dataSource = dataSource;
     }
 
-    // Copies the current row into a LoanView. Positions 0 to 7 match every loan SELECT.
+    // ---------------------------------------------------------
+    // HELPER: Copies the current row into a LoanView.
+    // Positions 0 to 7 match every loan SELECT in this file.
+    // ---------------------------------------------------------
     private static LoanView ReadLoan(NpgsqlDataReader reader)
     {
         return new LoanView
@@ -31,7 +38,9 @@ public class LoanRepository
         };
     }
 
-    // READ: every loan with its member and book, newest first.
+    // ---------------------------------------------------------
+    // TASK 7: READ every loan, joined with member and book.
+    // ---------------------------------------------------------
     public async Task<List<LoanView>> GetAllAsync()
     {
         const string sql =
@@ -56,14 +65,18 @@ public class LoanRepository
         return loans;
     }
 
-    // BORROW: lend one book, unless the member already has MaxOpenLoans books out.
-    // The check and the INSERT run inside one transaction: both happen, or neither does.
+    // ---------------------------------------------------------
+    // TASK 8: BORROW a book inside a transaction.
+    // Checks if the member is at the limit. If so, ROLLBACK.
+    // If below the limit, INSERT, then COMMIT.
+    // ---------------------------------------------------------
     public async Task<bool> BorrowAsync(long memberId, long bookId, int daysAllowed)
     {
         await using var connection = await _dataSource.OpenConnectionAsync();
         await using var transaction = await connection.BeginTransactionAsync();
 
-        // Lock this member's row: a second borrow for the same member waits until this one ends.
+        // 1. Lock this member's row so two simultaneous borrows don't 
+        //    read the same count at the same time.
         await using (var lockMember = new NpgsqlCommand(
             "SELECT member_id FROM lending.member WHERE member_id = @member_id FOR UPDATE;", connection, transaction))
         {
@@ -71,7 +84,7 @@ public class LoanRepository
             await lockMember.ExecuteNonQueryAsync();
         }
 
-        // Count the books this member has out.
+        // 2. Count how many books this member currently has out.
         long openLoans;
         await using (var count = new NpgsqlCommand(
             "SELECT COUNT(*) FROM lending.loan WHERE member_id = @member_id AND returned_on IS NULL;", connection, transaction))
@@ -80,13 +93,14 @@ public class LoanRepository
             openLoans = Convert.ToInt64(await count.ExecuteScalarAsync());
         }
 
+        // 3. If they are at the limit, undo and return false.
         if (openLoans >= MaxOpenLoans)
         {
             await transaction.RollbackAsync();
             return false;
         }
 
-        // Record the loan. The database fills loaned_on with today's date.
+        // 4. Otherwise, insert the new loan.
         await using (var insert = new NpgsqlCommand(
             "INSERT INTO lending.loan (member_id, book_id, days_allowed) VALUES (@member_id, @book_id, @days_allowed);", connection, transaction))
         {
@@ -96,21 +110,29 @@ public class LoanRepository
             await insert.ExecuteNonQueryAsync();
         }
 
+        // 5. Save permanently.
         await transaction.CommitAsync();
         return true;
     }
 
-    // RETURN: mark a loan as returned today. A loan already returned is left alone.
+    // ---------------------------------------------------------
+    // TASK 9: RETURN a book.
+    // Sets returned_on to today, but ONLY if it's currently NULL.
+    // ---------------------------------------------------------
     public async Task ReturnAsync(long loanId)
     {
         const string sql = "UPDATE lending.loan SET returned_on = CURRENT_DATE " +
                            "WHERE loan_id = @id AND returned_on IS NULL;";
+
         await using var command = _dataSource.CreateCommand(sql);
         command.Parameters.AddWithValue("id", loanId);
         await command.ExecuteNonQueryAsync();
     }
 
-    // READ: one member's loans, newest first.
+    // ---------------------------------------------------------
+    // TASK 10: READ one member's loans (for the Details page).
+    // Same as GetAllAsync, but filtered by memberId.
+    // ---------------------------------------------------------
     public async Task<List<LoanView>> GetByMemberAsync(long memberId)
     {
         const string sql =

@@ -10,6 +10,7 @@ public class MembersController : Controller
     private readonly MemberRepository _members;
     private readonly LoanRepository _loans;
 
+    // ASP.NET Core hands in the repositories because Program.cs registered them.
     public MembersController(MemberRepository members, LoanRepository loans)
     {
         _members = members;
